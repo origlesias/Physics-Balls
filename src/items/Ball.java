@@ -43,11 +43,13 @@ public class Ball extends Thread {
      * @param radius
      * @param parent
      */
-    public Ball(float x, float y, float speedx, float speedy, float radius, float mass, Space parent) {
+    public Ball(float x, float y, float speed, float radius, float mass, float angle, Space parent) {
         this.x = x;
         this.y = y;
         this.speedx = speedx;
         this.speedy = speedy;
+        this.speedx = (float) (speed * Math.cos(Math.toRadians(angle)));
+        this.speedy = (float) (-speed * Math.sin(Math.toRadians(angle)));
         this.radius = radius;
         this.parent = parent;
         this.mass = mass;

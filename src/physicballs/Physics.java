@@ -13,7 +13,7 @@ import items.Ball;
  * @author Liam-Portatil
  */
 public class Physics {
-
+    
     public static Vec2d calculo2Vec(Vec2d d, double d_mod, Vec2d v_ini) {
         double v_mod, delta, beta, bounce_angle;
         Vec2d ud, uv_ini, v_fin, uv_fin;
@@ -53,7 +53,7 @@ public class Physics {
         // Aplica las velocidades finales al ángulo de posicion
         b1.setSpeedx((float) (Math.cos(collAngle) * fin_xSpeed_b1 - Math.sin(collAngle) * fin_ySpeed_b1));
         b1.setSpeedx((float) (Math.sin(collAngle) * fin_xSpeed_b1 + Math.cos(collAngle) * fin_ySpeed_b1));
-        b2.setSpeedy((float) (Math.cos(collAngle) * fin_xSpeed_b2 - Math.sin(collAngle) * fin_ySpeed_b1));
+        b2.setSpeedy((float) (Math.cos(collAngle) * fin_xSpeed_b2 - Math.sin(collAngle) * fin_ySpeed_b2));
         b2.setSpeedy((float) (Math.sin(collAngle) * fin_xSpeed_b2 + Math.cos(collAngle) * fin_ySpeed_b2));
         // Pone las posiciones de las bolas como vectores para facilitar el cálculo
         Vec2d pos_b1 = new Vec2d(b1.getX(), b1.getY());

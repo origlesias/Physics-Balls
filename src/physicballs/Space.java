@@ -77,9 +77,9 @@ public class Space extends Canvas implements Runnable {
 
         for (int con = 0; con < ballLimit; con++) {
             if (SpaceRules.sizes) {
-                balls.add(new Ball(con * 55 + 20, con * 40 + 20, 1, 2, 10 + (con * 2) - 9, 1, this));
+                balls.add(new Ball(con * 55 + 20, con * 40 + 20, 2, 10, 10, 325, this));
             } else {
-                balls.add(new Ball(con * 55 + 20, con * 40 + 20, 1, 2, 10, 1, this));
+                balls.add(new Ball(con * 55 + 20, con * 40 + 20, 2, 10, 10, 325, this));
 
             }
         }
@@ -169,32 +169,37 @@ public class Space extends Canvas implements Runnable {
      */
     public void ballWallCollision(Ball b, Dimension d) {
         if (b.getRadius() + b.getX() >= d.width) {
-            b.setSpeedx(b.getSpeedx() * -1);
+            b.setSpeedx(-Math.abs(b.getSpeedx()));
         }
         if (b.getX() - b.getRadius() <= 0) {
-            b.setSpeedx(b.getSpeedx() * -1);
+            b.setSpeedx(Math.abs(b.getSpeedx()));
         }
         if (b.getRadius() + b.getY() >= d.height) {
-            b.setSpeedy(b.getSpeedy() * -1);
+            b.setSpeedy(-Math.abs(b.getSpeedx()));
         }
         if (b.getY() - b.getRadius() <= 0) {
-            b.setSpeedy(b.getSpeedy() * -1);
+            b.setSpeedy(Math.abs(b.getSpeedx()));
         }
+        
+        if(b.getY()+b.getRadius()>d.height) b.setY(d.height-b.getRadius());
+        if(b.getX()+b.getRadius()>d.width) b.setX(d.width-b.getRadius());
+        if(b.getY()+b.getRadius()<0) b.setY(b.getRadius());
+        if(b.getX()+b.getRadius()<0) b.setX(b.getRadius());
     }
 
     private void ballObstaculoCollision(Ball b, Obstaculo o) {
         if (o.inRange(b)) {
             if (b.getRadius() + b.getX() >= o.getX() + o.getWidth()) {
-                b.setSpeedx(b.getSpeedx() * -1);
+                b.setSpeedx(Math.abs(b.getSpeedx()));
             }
             if (b.getX() - b.getRadius() <= o.getX()) {
-                b.setSpeedx(b.getSpeedx() * -1);
+                b.setSpeedx(-Math.abs(b.getSpeedx()));
             }
             if (b.getRadius() + b.getY() >= o.getY() + o.getWidth()) {
-                b.setSpeedy(b.getSpeedy() * -1);
+                b.setSpeedy(Math.abs(b.getSpeedy()));
             }
             if (b.getY() - b.getRadius() <= o.getY()) {
-                b.setSpeedy(b.getSpeedy() * -1);
+                b.setSpeedy(-Math.abs(b.getSpeedy()));
             }
         }
 
@@ -308,7 +313,7 @@ public class Space extends Canvas implements Runnable {
     }
 
     public void addBall() {
-        Ball b = new Ball(240, 240, 1, 2, 10, 1, this);
+        Ball b = new Ball(240, 240, 2, 20, 50, 325, this);
         b.setColor(Color.yellow);
         b.start();
         balls.add(b);
