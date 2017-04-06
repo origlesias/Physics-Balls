@@ -48,9 +48,12 @@ public class StopItem extends Thread {
         this.occupied = false;
     }
 
-    public synchronized void insert(Ball b) throws InterruptedException {
+    public synchronized void insert(Ball b){
         while (occupied && this.b != b) {
-            wait();
+            try {
+                wait();
+            } catch (InterruptedException ex) {
+            }
         }
         if (this.b == null) {
             this.b = b;

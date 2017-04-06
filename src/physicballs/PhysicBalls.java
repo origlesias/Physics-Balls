@@ -22,7 +22,7 @@ public class PhysicBalls extends JFrame {
      */
     private Container content;
     private Server server;
-    private Space space = new Space(650, 400, 10);
+    private Space space = new Space(1200, 500, 10);
 
     /**
      * Constructor
@@ -42,7 +42,7 @@ public class PhysicBalls extends JFrame {
     public void init() {
         //initial values
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocation(150, 150);
+        setLocation(0, 0);
         setLayout(new GridLayout(1, 1));
 
         //Main panel

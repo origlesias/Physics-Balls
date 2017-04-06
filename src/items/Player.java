@@ -6,8 +6,10 @@
 package items;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import physicballs.Physics;
 import physicballs.Space;
 
 /**
@@ -16,25 +18,33 @@ import physicballs.Space;
  */
 public class Player extends Ball {
 
-    public Player(float x, float y, float speedx, float speedy, float radius, float mass, Space parent) {
-        super(x, y, speedx, speedy, radius, mass, parent);
+    public Player(float x, float y, float speed, float accel, float radius, float mass, float angle, Space parent) {
+        super(x, y, speed, accel, radius, mass, angle, parent, "N");
         color = Color.red;
     }
 
     public void moveUp() {
-        y -= speedy;
+        posY -= speedy;
     }
 
     public void moveDown() {
-        y += speedy;
+        posY += speedy;
     }
 
     public void moveLeft() {
-        x += speedx;
+        posX += speedx;
     }
 
     public void moveRight() {
-        x -= speedx;
+        posX -= speedx;
+    }
+    
+   
+    public void checkCollision(){
+        Physics.ballPlayerCollision(this, parent.getPlayer(),parent);
+        Physics.playerBallCollission(this, parent.getBalls());
+//        ballStopItemCollision(p, stopItems);
+        Physics.ballWallCollision(this, parent.getD());
     }
 
     @Override
@@ -42,7 +52,7 @@ public class Player extends Ball {
 
         while (true) {
             try {
-                parent.checkCollision(this);
+                checkCollision();
 //                movement();
                 Thread.sleep(10);
             } catch (InterruptedException ex) {
