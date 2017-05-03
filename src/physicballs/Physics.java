@@ -27,12 +27,15 @@ public class Physics {
     public synchronized static void ballMovement(Ball ball, Space parent){
         checkCollision(ball, parent);
         float dtime =2*(System.nanoTime()- ball.getTime())/(float) (Math.pow(10, 8));
+        float angle= ball.getAngle();
+        float accelx= (float) (ball.getAccel()* Math.cos(Math.toRadians(angle)));
+        float accely= (float) (ball.getAccel()* -Math.sin(Math.toRadians(angle)));
         if(ball.getSpeed()<ball.getMaxspeed()){
-        ball.setSpeedx((float) (ball.getSpeedx()+ball.getSpeedx()*ball.getAccel()/100));
-        ball.setSpeedy((float) (ball.getSpeedy()+ball.getSpeedy()*ball.getAccel()/100));
+        ball.setSpeedx(ball.getSpeedx()+(accelx/2)*dtime*dtime);
+        ball.setSpeedy(ball.getSpeedy()+(accely/2)*dtime*dtime);
         }else{
-        ball.setSpeedx((float) (ball.getSpeedx()-ball.getSpeedx()*ball.getAccel()/100));
-        ball.setSpeedy((float) (ball.getSpeedy()-ball.getSpeedy()*ball.getAccel()/100));
+        ball.setSpeedx(ball.getSpeedx()-(accelx/2)*dtime*dtime);
+        ball.setSpeedy(ball.getSpeedy()-(accely/2)*dtime*dtime);
         }
         if(SpaceRules.gravity){
         ball.setSpeedy(ball.getSpeedy()+(parent.getGravity()/2)*dtime*dtime);

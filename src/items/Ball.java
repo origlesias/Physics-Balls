@@ -209,7 +209,7 @@ public class Ball extends Item implements Runnable {
     }
     
     public float getAngle(){
-        return (float) Math.toDegrees(Math.atan2(speedx, speedy));
+        return (float) Math.toDegrees(Math.atan2(speedy, speedx));
     }
 
     public void setMaxspeed(float maxspeed) {
