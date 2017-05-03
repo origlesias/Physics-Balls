@@ -36,13 +36,15 @@ public class Space extends Canvas implements Runnable {
     private int spaceHeight;
     private Dimension d;
 
-    private int ballLimit = 3;
+    private int ballLimit = 2;
     private int stopItemsLimit = 1;
 
     private CopyOnWriteArrayList<Ball> balls;
     private ArrayList<StopItem> stopItems;
 
     private Obstaculo obstaculo;
+    
+    private final float gravity = 6f;
 
     private Player player;
 
@@ -80,13 +82,13 @@ public class Space extends Canvas implements Runnable {
         Ball b;
         for (int con = 0; con < ballLimit; con++) {
             if (SpaceRules.sizes) {
-                b=new Ball(con * 55 + 20, con * 40 + 20, 2, 1, 10+con*2, 10+con*2, con*20, this, "N");
+                b=new Ball(50, 50, 0.5f, 1, 10+con*2, 10+con*2, con*20, this, "N");
                 balls.add(b);
             } else {
                 if(con<8){
-                    b=new Ball(con * 55 + 20, con * 40 + 20, 2, 1, 10+con*2, 10+con*2, con*20, this, "N");
+                    b=new Ball(50, 50, 0.5f, 1, 10+con*2, 10+con*2, con*20, this, "N");
                 }else{
-                    b=new Ball(con * 55 + 20, con * 40 + 20, 2, 1, 10+con*2, 10+con*2, con*20, this, "E");
+                    b=new Ball(50, 50, 0.5f, 1, 10+con*2, 10+con*2, con*20, this, "E");
                 }
                 
                 balls.add(b);
@@ -170,6 +172,11 @@ public class Space extends Canvas implements Runnable {
     public Obstaculo getObstaculo() {
         return obstaculo;
     }
+
+    public float getGravity() {
+        return gravity;
+    }
+    
     
     
 

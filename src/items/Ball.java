@@ -25,10 +25,10 @@ public class Ball extends Item implements Runnable {
     
     protected float speedx;
     protected float speedy;
-    protected float maxspeed=50;
+    protected float maxspeed=20;
 
-    protected float accelx;
-    protected float accely;
+    protected float accel=0;
+            
     
     protected float radius;
     
@@ -54,13 +54,21 @@ public class Ball extends Item implements Runnable {
      * @param parent
      */
     public Ball(float x, float y, float speed, float accel, float radius, float mass, float angle, Space parent, String type) {
-        super(x,y,mass,Color.BLUE);
+        super(x/100*parent.getD().width,y/100*parent.getD().height,mass,Color.BLUE);
         speedx = (float) (speed * Math.cos(Math.toRadians(angle)));
         speedy = (float) (-speed * Math.sin(Math.toRadians(angle)));
-        accelx = (float) (accel * Math.cos(Math.toRadians(angle)));
-        accely = (float) (-accel * Math.sin(Math.toRadians(angle)));
+        this.accel= accel;
         this.radius = radius;
         this.parent = parent;
+        setType(type);
+        color();
+    }
+    
+    public Ball(float x, float y, float speedx, float speedy, float radius, float mass, String type){
+        super(x,y,mass,Color.BLUE);
+        this.speedx= speedx;
+        this.speedy= speedy;
+        this.radius= radius;
         setType(type);
         color();
     }
@@ -177,24 +185,37 @@ public class Ball extends Item implements Runnable {
         return time;
     }
 
-    public float getAccelx() {
-        return accelx;
+    public float getAccel() {
+        return accel;
     }
 
-    public void setAccelx(float accelx) {
-        this.accelx = accelx;
-    }
-
-    public float getAccely() {
-        return accely;
-    }
-
-    public void setAccely(float accely) {
-        this.accely = accely;
+    public void setAccel(float accel) {
+        this.accel = accel;
     }
 
     public float getMaxspeed() {
         return maxspeed;
     }
+    
+    
+    
+    public double getSpeed(){
+        return Math.hypot(speedx, speedy);
+    }
+    
+    public void setSpeed(float speed, float angle){
+        speedx = (float) (speed * Math.cos(Math.toRadians(angle)));
+        speedy = (float) (-speed * Math.sin(Math.toRadians(angle)));
+    }
+    
+    public float getAngle(){
+        return (float) Math.toDegrees(Math.atan2(speedx, speedy));
+    }
 
+    public void setMaxspeed(float maxspeed) {
+        this.maxspeed = maxspeed;
+    }
+    
+    
+    
 }
