@@ -24,18 +24,20 @@ import rules.SpaceRules;
 public class Physics {
     
     
-    public static void ballMovement(Ball ball, Space parent){
+    public synchronized static void ballMovement(Ball ball, Space parent){
         checkCollision(ball, parent);
         float dtime =2*(System.nanoTime()- ball.getTime())/(float) (Math.pow(10, 8));
         float angle= ball.getAngle();
+        System.out.print(angle+" - ");
         float accelx= (float) (ball.getAccel()* Math.cos(Math.toRadians(angle)));
-        float accely= (float) (ball.getAccel()* -Math.sin(Math.toRadians(angle)));
+        float accely= (float) (ball.getAccel()* Math.sin(Math.toRadians(angle)));
         if(ball.getSpeed()<ball.getMaxspeed()){
         ball.setSpeedx(ball.getSpeedx()+(accelx/2)*dtime*dtime);
         ball.setSpeedy(ball.getSpeedy()+(accely/2)*dtime*dtime);
         }else{
-        ball.setSpeedx(ball.getSpeedx()-(accelx/2)*dtime*dtime);
-        ball.setSpeedy(ball.getSpeedy()-(accely/2)*dtime*dtime);
+        //ball.setSpeedx((float) (ball.getMaxspeed()* Math.cos(Math.toRadians(angle))));
+        //ball.setSpeedy((float) (ball.getMaxspeed()* Math.sin(Math.toRadians(angle))));
+        ball.setSpeed(ball.getMaxspeed(), angle);
         }
         if(SpaceRules.gravity){
         ball.setSpeedx(ball.getSpeedx()+(parent.getGravityX()/2)*dtime*dtime);
@@ -43,12 +45,12 @@ public class Physics {
         }
         ball.setX(ball.getX()+ball.getSpeedx()*dtime);
         ball.setY(ball.getY()+ball.getSpeedy()*dtime);
+        System.out.println(ball.getAngle());
         ball.currentTime();
     }
     
     public static void checkCollision(Ball ball, Space parent){
             //Physics.ballPlayerCollision(this, parent.getPlayer(), parent);
-            Physics.ballStopItemCollision(ball, parent.getStopItems());
             Physics.ballObstaculoCollision(ball, parent.getObstaculo());
             Physics.ballWallCollision(ball, parent.getD());
             Physics.ballBallCollission(ball, parent.getBalls(), parent);
@@ -68,20 +70,24 @@ public class Physics {
             b.setSpeedx(Math.abs(b.getSpeedx()));
         }
         if (b.getRadius() + b.getY() >= d.height) {
-            b.setSpeedy(-Math.abs(b.getSpeedx()));
+            b.setSpeedy(-Math.abs(b.getSpeedy()));
         }
         if (b.getY() - b.getRadius() <= 0) {
-            b.setSpeedy(Math.abs(b.getSpeedx()));
+            b.setSpeedy(Math.abs(b.getSpeedy()));
         }
         
         if(b.getY()+b.getRadius()>d.height) b.setY(d.height-b.getRadius());
         if(b.getX()+b.getRadius()>d.width) b.setX(d.width-b.getRadius());
-        if(b.getY()+b.getRadius()<0) b.setY(b.getRadius());
-        if(b.getX()+b.getRadius()<0) b.setX(b.getRadius());
+        if(b.getY()-b.getRadius()<0) b.setY(b.getRadius());
+        if(b.getX()-b.getRadius()<0) b.setX(b.getRadius());
     }
     
     public static void ballObstaculoCollision(Ball b, Obstacle o) {
         if (o.inRange(b)) {
+            if(b.getY()-b.getRadius()>o.getY()+o.getHeight()) b.setY(o.getY()+o.getHeight()+b.getRadius());
+            if(b.getX()-b.getRadius()>o.getX()+o.getWidth()) b.setX(o.getX()+o.getWidth()+b.getRadius());
+            if(b.getY()+b.getRadius()<o.getY()) b.setY(o.getY()-b.getRadius());
+            if(b.getX()+b.getRadius()<o.getX()) b.setX(o.getX()-b.getRadius());
             if (b.getRadius() + b.getX() >= o.getX() + o.getWidth()) {
                 b.setSpeedx(Math.abs(b.getSpeedx()));
             }
@@ -173,7 +179,7 @@ public class Physics {
 
     }
     
-    public static void ballStopItemCollision(Ball b, ArrayList<StopItem> items){
+    public synchronized static void ballStopItemCollision(Ball b, ArrayList<StopItem> items){
         for (StopItem item : items) {
             if (item.inRange(b) || item.getBall() == b) {
                 item.insert(b);
@@ -181,7 +187,7 @@ public class Physics {
         }
     }
     
-    public static synchronized boolean ballStopItemInRange(Ball b, StopItem item) {
+    public static boolean ballStopItemInRange(Ball b, StopItem item) {
         return b.getY() - b.getRadius() < item.getY() + item.getWidth()
                 && b.getY() + b.getRadius() > item.getY()
                 && b.getX() - b.getRadius() < item.getX() + item.getWidth()
@@ -202,7 +208,7 @@ public class Physics {
         return new Vec2d(uv_fin.x * v_mod, uv_fin.y * v_mod); // Vector de velocidad final
     }
 
-    public synchronized static void calcBounce(Ball b1, Ball b2) {
+    public static void calcBounce(Ball b1, Ball b2) {
         // Ángulo de colision entre las bolas
         double collAngle = Math.atan2((b2.getY() - b1.getY()), (b2.getX() - b1.getX()));
         // Velocidad de la bola 1

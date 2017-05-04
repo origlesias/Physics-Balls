@@ -25,7 +25,7 @@ public class Ball extends Item implements Runnable {
     
     protected float speedx;
     protected float speedy;
-    protected float maxspeed=10;
+    protected final float maxspeed=20;
 
     protected float accel=0;
             
@@ -205,17 +205,11 @@ public class Ball extends Item implements Runnable {
     
     public void setSpeed(float speed, float angle){
         speedx = (float) (speed * Math.cos(Math.toRadians(angle)));
-        speedy = (float) (-speed * Math.sin(Math.toRadians(angle)));
+        speedy = (float) (speed * Math.sin(Math.toRadians(angle)));
     }
     
     public float getAngle(){
         return (float) Math.toDegrees(Math.atan2(speedy, speedx));
     }
-
-    public void setMaxspeed(float maxspeed) {
-        this.maxspeed = maxspeed;
-    }
-    
-    
     
 }

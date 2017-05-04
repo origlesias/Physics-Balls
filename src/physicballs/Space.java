@@ -83,13 +83,13 @@ public class Space extends Canvas implements Runnable {
         Ball b;
         for (int con = 0; con < ballLimit; con++) {
             if (SpaceRules.sizes) {
-                b=new Ball((float )Math.random()*100, (float )Math.random()*100, 0.5f, 1, 10+con*2, 10+con*2, con*20, this, "N");
+                b=new Ball((float )Math.random()*100, (float )Math.random()*100, 0.5f, 1, 10+con*2, 10+con*2, 80, this, "N");
                 balls.add(b);
             } else {
                 if(con<8){
-                    b=new Ball((float )Math.random()*100, (float )Math.random()*100, 0.5f, 1, 10+con*2, 10+con*2, con*20, this, "N");
+                    b=new Ball((float )Math.random()*100, (float )Math.random()*100, 0.5f, 1, 10+con*2, 10+con*2,80, this, "N");
                 }else{
-                    b=new Ball((float )Math.random()*100, (float )Math.random()*100, 0.5f, 1, 10+con*2, 10+con*2, con*20, this, "E");
+                    b=new Ball((float )Math.random()*100, (float )Math.random()*100, 0.5f, 1, 10+con*2, 10+con*2, 80, this, "E");
                 }
                 
                 balls.add(b);
@@ -97,8 +97,8 @@ public class Space extends Canvas implements Runnable {
             }
         }
 
-        stopItems.add(new StopItem(0, 0, 300, 500, this));
-        stopItems.add(new StopItem(60, 30, 70, 50, this));
+        stopItems.add(new StopItem(0, 0, 0, 0, this));
+        stopItems.add(new StopItem(60, 30, 0, 0, this));
 
         obstaculo = new Obstacle(50, 50, 20, 30, 60, this);
 
@@ -197,6 +197,9 @@ public class Space extends Canvas implements Runnable {
     }
 
     private void checkHoles(){
+        balls.forEach((ball) -> {
+            Physics.ballStopItemCollision(ball, stopItems);
+        });
         stopItems.forEach((hole) -> {
             if(!balls.contains(hole.getBall()))hole.notifyBalls();
         });
@@ -210,7 +213,7 @@ public class Space extends Canvas implements Runnable {
         this.createBufferStrategy(2);
         while (true) {
             this.paint();
-            this.checkHoles();
+            //this.checkHoles();
             try {
                 Thread.sleep(15); // nano -> ms
             } catch (InterruptedException ex) {

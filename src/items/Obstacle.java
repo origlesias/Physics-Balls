@@ -53,6 +53,16 @@ public class Obstacle extends Item{
         this.width = width;
     }
 
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
+    }
+    
+    
+
     public synchronized boolean inRange(Ball b) {
         return b.getY() - b.getRadius() < posY + height
                 && b.getY() + b.getRadius() > posY
