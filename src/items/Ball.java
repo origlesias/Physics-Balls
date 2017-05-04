@@ -25,7 +25,7 @@ public class Ball extends Item implements Runnable {
     
     protected float speedx;
     protected float speedy;
-    protected float maxspeed=20;
+    protected float maxspeed=10;
 
     protected float accel=0;
             

@@ -7,7 +7,7 @@ package physicballs;
 
 import com.sun.javafx.geom.Vec2d;
 import items.Ball;
-import items.Obstaculo;
+import items.Obstacle;
 import items.Player;
 import items.StopItem;
 import java.awt.Color;
@@ -24,7 +24,7 @@ import rules.SpaceRules;
 public class Physics {
     
     
-    public synchronized static void ballMovement(Ball ball, Space parent){
+    public static void ballMovement(Ball ball, Space parent){
         checkCollision(ball, parent);
         float dtime =2*(System.nanoTime()- ball.getTime())/(float) (Math.pow(10, 8));
         float angle= ball.getAngle();
@@ -38,7 +38,8 @@ public class Physics {
         ball.setSpeedy(ball.getSpeedy()-(accely/2)*dtime*dtime);
         }
         if(SpaceRules.gravity){
-        ball.setSpeedy(ball.getSpeedy()+(parent.getGravity()/2)*dtime*dtime);
+        ball.setSpeedx(ball.getSpeedx()+(parent.getGravityX()/2)*dtime*dtime);
+        ball.setSpeedy(ball.getSpeedy()+(parent.getGravityY()/2)*dtime*dtime);
         }
         ball.setX(ball.getX()+ball.getSpeedx()*dtime);
         ball.setY(ball.getY()+ball.getSpeedy()*dtime);
@@ -47,7 +48,7 @@ public class Physics {
     
     public static void checkCollision(Ball ball, Space parent){
             //Physics.ballPlayerCollision(this, parent.getPlayer(), parent);
-            //Physics.ballStopItemCollision(ball, parent.getStopItems());
+            Physics.ballStopItemCollision(ball, parent.getStopItems());
             Physics.ballObstaculoCollision(ball, parent.getObstaculo());
             Physics.ballWallCollision(ball, parent.getD());
             Physics.ballBallCollission(ball, parent.getBalls(), parent);
@@ -79,7 +80,7 @@ public class Physics {
         if(b.getX()+b.getRadius()<0) b.setX(b.getRadius());
     }
     
-    public static void ballObstaculoCollision(Ball b, Obstaculo o) {
+    public static void ballObstaculoCollision(Ball b, Obstacle o) {
         if (o.inRange(b)) {
             if (b.getRadius() + b.getX() >= o.getX() + o.getWidth()) {
                 b.setSpeedx(Math.abs(b.getSpeedx()));
@@ -201,7 +202,7 @@ public class Physics {
         return new Vec2d(uv_fin.x * v_mod, uv_fin.y * v_mod); // Vector de velocidad final
     }
 
-    public static void calcBounce(Ball b1, Ball b2) {
+    public synchronized static void calcBounce(Ball b1, Ball b2) {
         // Ángulo de colision entre las bolas
         double collAngle = Math.atan2((b2.getY() - b1.getY()), (b2.getX() - b1.getX()));
         // Velocidad de la bola 1
@@ -256,7 +257,7 @@ public class Physics {
         
     }
     
-    public static void specialCollision(Ball b1, Ball b2, Space space){
+    public synchronized static void specialCollision(Ball b1, Ball b2, Space space){
         if(b1.getType()==Ball.ballType.EXPLOSIVE||b2.getType()==Ball.ballType.EXPLOSIVE){
         if(b1.getType()==Ball.ballType.EXPLOSIVE){
             explode(b1, space);
@@ -266,19 +267,19 @@ public class Physics {
         }
         }else{
             if(b1.getType()==Ball.ballType.BULLET&&b2.getType()==Ball.ballType.BULLET){
-                if(Math.hypot(b1.getSpeedx(), b1.getSpeedy())>40||Math.hypot(b2.getSpeedx(), b2.getSpeedy())>40){
+                if(Math.hypot(b1.getSpeedx(), b1.getSpeedy())>8||Math.hypot(b2.getSpeedx(), b2.getSpeedy())>8){
                     impact(b1,b2, space);
                 }else{
                     calcBounce(b1, b2);
                 }
         }else if(b1.getType()==Ball.ballType.BULLET){
-                if(Math.hypot(b1.getSpeedx(), b1.getSpeedy())>40){
+                if(Math.hypot(b1.getSpeedx(), b1.getSpeedy())>8){
                     impact(b1,b2, space);
                 }else{
                     calcBounce(b1, b2);
                 }
             }else{
-                if(Math.hypot(b2.getSpeedx(), b2.getSpeedy())>40){
+                if(Math.hypot(b2.getSpeedx(), b2.getSpeedy())>8){
                     impact(b2,b1, space);
                 }else{
                     calcBounce(b1, b2);
@@ -289,13 +290,13 @@ public class Physics {
     
     public static void explode(Ball b, Space space){
         if(space.getBalls().contains(b)){
-        space.delete(space.getBalls().indexOf(b));
         for(int i=0;i!=10;i++){
             float angle= (float) (i*36+(new Random().nextInt(36)));
-            Ball bullet=new Ball((float) (b.getX()+b.getRadius()/10*Math.cos(Math.toRadians(angle))),(float) (b.getY()+b.getRadius()/10*Math.sin(Math.toRadians(angle))), 2, 1, b.getRadius()/10, b.getMass()/10, angle, space, "B");
+            Ball bullet=new Ball((float) (b.getX()+b.getRadius()/10*Math.cos(Math.toRadians(angle)))*100/space.getD().width,(float) (b.getY()+b.getRadius()/10*Math.sin(Math.toRadians(angle)))*100/space.getD().height, 2, 1, b.getRadius()/10, b.getMass()/10, angle, space, "B");
             space.getBalls().add(bullet);
             new Thread(bullet).start();
         }
+        space.delete(space.getBalls().indexOf(b));
         }
     }
     

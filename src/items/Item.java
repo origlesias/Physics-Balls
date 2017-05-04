@@ -6,6 +6,7 @@
 package items;
 
 import java.awt.Color;
+import physicballs.Space;
 
 /**
  *
