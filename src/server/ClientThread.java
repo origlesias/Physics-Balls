@@ -6,7 +6,6 @@
 package server;
 
 import items.Ball;
-import items.Player;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,14 +24,13 @@ public class ClientThread extends Thread {
     private Socket clientSock;
     private String cliAddr;
     private Space parent;
-    private Player player;
 
     public ClientThread(Socket s, String cliAddr, Space parent) {
         clientSock = s;
         this.cliAddr = cliAddr;
         System.out.println("Client connection from " + cliAddr);
         this.parent = parent;
-        player = parent.getPlayer();
+        //player = parent.getPlayer();
     }
 
     public void run() {
@@ -60,16 +58,16 @@ public class ClientThread extends Thread {
                 String str = "";
                 switch (in.readLine()) {
                     case "up":
-                        player.moveUp();
+                        //player.moveUp();
                         break;
                     case "down":
-                        player.moveDown();
+                        //player.moveDown();
                         break;
                     case "left":
-                        player.moveLeft();
+                       // player.moveLeft();
                         break;
                     case "right":
-                        player.moveRight();
+                       // player.moveRight();
                         break;
                     default:
                 }

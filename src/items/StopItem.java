@@ -35,6 +35,7 @@ public class StopItem extends Obstacle{
      * @param x
      * @param y
      * @param width
+     * @param height
      * @param parent
      */
     public StopItem(float x, float y, float width, float height, Space parent) {
@@ -42,12 +43,16 @@ public class StopItem extends Obstacle{
         this.parent = parent;
         this.occupied = false;
     }
+    
+    public StopItem(){}
 
     public synchronized void insert(Ball b){
         if(occupied && this.b != b) {
             try {
+                b.setStoped(true);
                 wait();
                 b.currentTime();
+                b.setStoped(false);
             } catch (InterruptedException ex) {
             }
         }

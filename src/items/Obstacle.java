@@ -27,18 +27,24 @@ public class Obstacle extends Item{
      *
      * @param x
      * @param y
+     * @param mass
      * @param width
+     * @param height
+     * @param parent
      */
     public Obstacle(float x, float y, float mass, float width, float height, Space parent) {
-        super(x/100*parent.getD().width,y/100*parent.getD().height,mass,Color.LIGHT_GRAY);
+        super(x,y,mass,Color.LIGHT_GRAY);
         this.width = width;
         this.height= height;
     }
+    
+    public Obstacle(){}
     
     /**
      * Draw the ball in the graphics context g. Note: The drawing color in g is
      * changed to the color of the ball.
      *
+     * @param g
      */
     public void draw(Graphics g) {
         g.setColor(color);

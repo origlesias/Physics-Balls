@@ -26,6 +26,8 @@ public class Item {
         this.color = color;
     }
     
+    public Item(){}
+    
     public float getX() {
         return posX;
     }
