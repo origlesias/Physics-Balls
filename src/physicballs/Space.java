@@ -5,7 +5,6 @@
  */
 package physicballs;
 
-import com.sun.javafx.geom.Vec2d;
 import items.Ball;
 import items.Obstacle;
 import items.StopItem;
@@ -31,8 +30,8 @@ public class Space extends Canvas implements Runnable {
     /**
      * Global parameters
      */
-    private static final int spaceWidth=1280;
-    private static final int spaceHeight=720;
+    private static int spaceWidth=1280;
+    private static int spaceHeight=720;
     private Dimension d;
     private String name;
 
@@ -181,9 +180,30 @@ public class Space extends Canvas implements Runnable {
     public void setName(String name) {
         this.name = name;
     }
-    
-    
-    
+
+    public int getBallLimit() {
+        return ballLimit;
+    }
+
+    public void setBallLimit(int ballLimit) {
+        this.ballLimit = ballLimit;
+    }
+
+    public static int getSpaceWidth() {
+        return spaceWidth;
+    }
+
+    public static int getSpaceHeight() {
+        return spaceHeight;
+    }
+
+    public static void setSpaceWidth(int spaceWidth) {
+        Space.spaceWidth = spaceWidth;
+    }
+
+    public static void setSpaceHeight(int spaceHeight) {
+        Space.spaceHeight = spaceHeight;
+    }
 
     public Dimension getD() {
         return d;
