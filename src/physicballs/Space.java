@@ -101,7 +101,7 @@ public class Space extends Canvas implements Runnable {
         stopItems.add(new StopItem(400, 200, 50, 50, this));
         stopItems.add(new StopItem(500, 500, 500, 200, this));
 
-        obstaculo = new Obstacle(700, 500, 20, 30, 60, this);
+        obstaculo = new Obstacle(700, 500, 30, 60, this);
 
         //new Thread(player).start();
 

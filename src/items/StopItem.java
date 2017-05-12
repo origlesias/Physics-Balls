@@ -39,7 +39,7 @@ public class StopItem extends Obstacle{
      * @param parent
      */
     public StopItem(float x, float y, float width, float height, Space parent) {
-        super(x, y, 0, width, height, parent);
+        super(x, y, width, height, parent);
         this.parent = parent;
         this.occupied = false;
     }
