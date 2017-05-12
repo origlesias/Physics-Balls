@@ -27,7 +27,6 @@ public class Obstacle extends Item{
      *
      * @param x
      * @param y
-     * @param mass
      * @param width
      * @param height
      * @param parent
