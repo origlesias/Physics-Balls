@@ -55,8 +55,6 @@ public class Space extends Canvas implements Runnable {
      * @param ballLimit
      */
     public Space(int spaceWidth, int spaceHeigth, int ballLimit) {
-//        this.spaceWidth = spaceWidth;
-//        this.spaceHeight = spaceHeigth;
         this.ballLimit = ballLimit;
         d= new Dimension(spaceWidth, spaceHeight);
         //init
@@ -77,8 +75,8 @@ public class Space extends Canvas implements Runnable {
         //player = new Player(30, 300, 10, 10, 10, 1, this);
 
         //Ball parameters
-        balls = new CopyOnWriteArrayList<Ball>();
-        stopItems = new ArrayList<StopItem>();
+        balls = new CopyOnWriteArrayList<>();
+        stopItems = new ArrayList<>();
 
         Ball b;
         for (int con = 0; con < ballLimit; con++) {
@@ -100,7 +98,7 @@ public class Space extends Canvas implements Runnable {
         stopItems.add(new StopItem(400, 200, 50, 50, this));
         stopItems.add(new StopItem(500, 500, 500, 200, this));
 
-        obstaculo = new Obstacle(700, 500, 30, 60, this);
+        obstaculo = new Obstacle(300, 200, 30, 60, this);
 
         //new Thread(player).start();
 
@@ -209,7 +207,6 @@ public class Space extends Canvas implements Runnable {
         return d;
     }
     
-    
 
     public void addBall() {
         Ball b = new Ball(240, 240, 2, 1, 20, 325,  "N");
@@ -218,14 +215,6 @@ public class Space extends Canvas implements Runnable {
         balls.add(b);
     }
 
-    private void checkHoles(){
-        balls.forEach((ball) -> {
-            Physics.ballStopItemCollision(ball, stopItems);
-        });
-        stopItems.forEach((hole) -> {
-            if(!balls.contains(hole.getBall()))hole.notifyBalls();
-        });
-    }
     
     /**
      * Main life cicle

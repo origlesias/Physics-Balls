@@ -57,7 +57,7 @@ public class StopItem extends Obstacle{
             this.b = b;
             occupied = true;
         }
-        if (!inRange(this.b)||!parent.getBalls().contains(this.b)) {
+        if (!intersects(this.b)||!parent.getBalls().contains(this.b)) {
             notifyBalls();
         }
     }
