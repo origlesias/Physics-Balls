@@ -343,19 +343,21 @@ public class Physics {
             }
         } else {
             if (b1.getType() == Ball.ballType.BULLET && b2.getType() == Ball.ballType.BULLET) {
-                if (Math.hypot(b1.getSpeedx(), b1.getSpeedy()) > 8 || Math.hypot(b2.getSpeedx(), b2.getSpeedy()) > 8) {
+                if (Math.hypot(b1.getSpeedx(), b1.getSpeedy()) > 8 && b2.getRadius()>b1.getRadius()*1.2) {
                     impact(b1, b2, space);
-                } else {
+                } else if(Math.hypot(b2.getSpeedx(), b2.getSpeedy()) > 8&& b2.getRadius()<b1.getRadius()*1.2){
+                    impact(b2, b1, space);
+                }else{
                     bounce(b1, b2);
                 }
             } else if (b1.getType() == Ball.ballType.BULLET) {
-                if (Math.hypot(b1.getSpeedx(), b1.getSpeedy()) > 8) {
+                if (Math.hypot(b1.getSpeedx(), b1.getSpeedy()) > 8 && b2.getRadius()>b1.getRadius()*1.2) {
                     impact(b1, b2, space);
                 } else {
                     bounce(b1, b2);
                 }
             } else {
-                if (Math.hypot(b2.getSpeedx(), b2.getSpeedy()) > 8) {
+                if (Math.hypot(b2.getSpeedx(), b2.getSpeedy()) > 8 && b2.getRadius()<b1.getRadius()*1.2) {
                     impact(b2, b1, space);
                 } else {
                     bounce(b1, b2);

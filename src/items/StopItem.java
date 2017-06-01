@@ -103,4 +103,22 @@ public class StopItem extends Obstacle{
     public Ball getBall() {
         return this.b;
     }
+
+    public Ball getB() {
+        return b;
+    }
+
+    public void setB(Ball b) {
+        this.b = b;
+    }
+
+    public Space getParent() {
+        return parent;
+    }
+
+    public void setParent(Space parent) {
+        this.parent = parent;
+    }
+    
+    
 }
