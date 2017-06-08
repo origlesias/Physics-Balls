@@ -68,28 +68,42 @@ public class Physics {
      * @param d
      */
     public synchronized static void ballWallCollision(Ball b, Dimension d) {
+        //rebota derecha
         if (b.getRadius() + b.getX() >= d.width) {
             b.setSpeedx(-Math.abs(b.getSpeedx()));
         }
+        
+        //rebota izquierda
         if (b.getX() - b.getRadius() <= 0) {
             b.setSpeedx(Math.abs(b.getSpeedx()));
         }
+        
+        //rebota abajo
         if (b.getRadius() + b.getY() >= d.height) {
             b.setSpeedy(-Math.abs(b.getSpeedy()));
         }
+        
+        //rebota arriba
         if (b.getY() - b.getRadius() <= 0) {
             b.setSpeedy(Math.abs(b.getSpeedy()));
         }
 
+        // reposiciona abajo
         if (b.getY() + b.getRadius() > d.height) {
             b.setY(d.height - b.getRadius());
         }
+        
+        // reposiciona derecha
         if (b.getX() + b.getRadius() > d.width) {
             b.setX(d.width - b.getRadius());
         }
+        
+        // reposiciona arriba
         if (b.getY() - b.getRadius() < 0) {
             b.setY(b.getRadius());
         }
+        
+        // reposiciona izquierda
         if (b.getX() - b.getRadius() < 0) {
             b.setX(b.getRadius());
         }

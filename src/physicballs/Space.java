@@ -13,12 +13,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import static java.lang.Thread.sleep;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import modulovisualsocket.ModuloVisualSocket;
+import org.physicballs.items.StatisticsData;
 import rules.SpaceRules;
 
 /**
@@ -45,6 +48,8 @@ public class Space extends Canvas implements Runnable {
     
     private final float gravityX = -3f;
     private final float gravityY = 6f;
+    
+    private ModuloVisualSocket mV;
 
 
     /**
@@ -60,6 +65,24 @@ public class Space extends Canvas implements Runnable {
         //init
         init();
 
+        mV = new ModuloVisualSocket();
+        new Thread(){
+            public void run(){
+                while (true) { 
+                    try {
+                        if(mV.connected){
+                        recoleccionDeDatos();
+                        }else{
+                            System.err.println("no conectado");
+                            sleep(5000);
+                        }
+                        sleep(100);
+                    } catch (InterruptedException ex) {
+                        System.out.println("Error en el thread de la clase space");
+                    }
+                }
+            }
+          }.start();
     }
     
     public Space(){}
@@ -230,6 +253,48 @@ public class Space extends Canvas implements Runnable {
             } catch (InterruptedException ex) {
             }
         }
+    }
+    
+    private float getTotalSpeed() {
+        float speed = 0;
+        for (int y = 0; y < balls.size(); y++) {
+            speed += balls.get(y).getSpeed();
+        }
+        return (float)Math.round(speed*100)/100;
+    }
+    
+    private float getTotalAccel() {
+        float accel = 0;
+        for (int y = 0; y < balls.size(); y++) {
+            accel += balls.get(y).getAccel();
+        }
+        return (float)Math.round(accel*100)/100;
+    }
+    
+    private float getTotalMass() {
+        float massa = 0;
+        for (int y = 0; y < balls.size(); y++) {
+            massa += balls.get(y).getMass();
+        }
+        return massa;
+    }
+    
+    private float getAverageSpeed() {
+        return (float)Math.round(getTotalSpeed()/balls.size()*100)/100;
+    }
+    
+    private float getAverageAccel() {
+        return getTotalAccel()/balls.size();
+    }
+    
+    private float getAverageMass() {
+        return getTotalMass()/balls.size();
+    }
+    
+    //si quieres abrir mas de dos pantallas modifica el 1 i pon el numero de pantalla que quieras, sino las estadisticas se uniran
+    private void recoleccionDeDatos(){
+    StatisticsData data = new StatisticsData(balls.size(), getTotalSpeed(), getTotalAccel(), getTotalMass(),getAverageSpeed(), getAverageAccel(), getAverageMass());
+        mV.sendStatistics(data);
     }
 
 }
