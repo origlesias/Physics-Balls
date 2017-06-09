@@ -66,6 +66,11 @@ public class Obstacle extends Item {
         this.height = height;
     }
 
+    /**
+     * Metodo que comprueba si una bola choca contra el obstaculo
+     * @param b
+     * @return 
+     */
     public synchronized boolean intersects(Ball b) {
         //distancia entre ejes del centro de la bola y del obstaculo
         double distX = Math.abs(b.getX() - posX - width / 2);

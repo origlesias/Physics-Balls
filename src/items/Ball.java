@@ -120,7 +120,7 @@ public class Ball extends Item {
         }
     
 
-    /**
+    /*
      * Getters and Setters
      */
 
@@ -180,6 +180,11 @@ public class Ball extends Item {
         return Math.hypot(speedx, speedy);
     }
     
+    /**
+     * Dado un angulo desglosa la velocidad en los ejes
+     * @param speed
+     * @param angle 
+     */
     public void setSpeed(float speed, float angle){
         speedx = (float) (speed * Math.cos(Math.toRadians(angle)));
         speedy = (float) (speed * Math.sin(Math.toRadians(angle)));

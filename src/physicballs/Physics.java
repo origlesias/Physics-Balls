@@ -21,15 +21,26 @@ import rules.SpaceRules;
  */
 public class Physics {
 
+    static Space space;
+    static Physics physics= new Physics();
+    
     private Physics() {
     }
-
-    public static void ballMovement(Ball ball, Space parent) {
-        checkCollision(ball, parent);
-        move(ball, parent);
+    
+    public static Physics getInstance(){
+        return physics;
     }
 
-    public static synchronized void move(Ball ball, Space parent) {
+    public void setSpace(Space space){
+        this.space = space;
+    }
+    
+    public static void ballMovement(Ball ball) {
+        checkCollision(ball);
+        move(ball);
+    }
+
+    public static synchronized void move(Ball ball) {
         float dtime = 2 * (System.nanoTime() - ball.getTime()) / (float) (Math.pow(10, 8));
         float angle = ball.getAngle();
 
@@ -44,8 +55,8 @@ public class Physics {
         }
 
         if (SpaceRules.gravity) {
-            ball.setSpeedx(ball.getSpeedx() + (parent.getGravityX() / 2) * dtime * dtime);
-            ball.setSpeedy(ball.getSpeedy() + (parent.getGravityY() / 2) * dtime * dtime);
+            ball.setSpeedx(ball.getSpeedx() + (space.getGravityX() / 2) * dtime * dtime);
+            ball.setSpeedy(ball.getSpeedy() + (space.getGravityY() / 2) * dtime * dtime);
         }
 
         ball.setX(ball.getX() + ball.getSpeedx() * dtime);
@@ -54,11 +65,11 @@ public class Physics {
         ball.currentTime();
     }
 
-    public static void checkCollision(Ball ball, Space parent) {
-        Physics.ballStopItemCollision(ball, parent.getStopItems());
-        Physics.ballObstaculoCollision(ball, parent.getObstaculo());
-        Physics.ballWallCollision(ball, parent.getD());
-        Physics.ballBallCollission(ball, parent.getBalls(), parent);
+    public static void checkCollision(Ball ball) {
+        Physics.ballStopItemCollision(ball, space.getStopItems());
+        Physics.ballObstaculoCollision(ball, space.getObstaculo());
+        Physics.ballWallCollision(ball, space.getD());
+        Physics.ballBallCollission(ball, space.getBalls());
     }
 
     /**
@@ -182,7 +193,7 @@ public class Physics {
      * @param balls
      * @param space
      */
-    public synchronized static void ballBallCollission(Ball b, CopyOnWriteArrayList<Ball> balls, Space space) {
+    public synchronized static void ballBallCollission(Ball b, CopyOnWriteArrayList<Ball> balls) {
         // Variables usadas en las comrobaciones
         balls.stream().filter(ball -> {
             double r, d_mod;
@@ -197,7 +208,7 @@ public class Physics {
             if (b.getType() == Ball.ballType.NORMAL && ball.getType() == Ball.ballType.NORMAL) {
                 bounce(b, ball);
             } else {
-                specialCollision(b, ball, space);
+                specialCollision(b, ball);
             }
         });
     }
@@ -205,7 +216,12 @@ public class Physics {
     public static void ballStopItemCollision(Ball b, ArrayList<StopItem> items) {
         items.stream().filter(item -> item.intersects(b) || item.getBall() == b).forEach(item -> {
             item.insert(b);
+            
         });
+    }
+    
+    public static boolean inSpace(Ball b, StopItem item){
+        return !space.getBalls().contains(item.getB());
     }
 
     public static boolean ballStopItemInRange(Ball b, StopItem item) {
@@ -347,32 +363,32 @@ public class Physics {
         } while (r > d_mod);
     }
 
-    public synchronized static void specialCollision(Ball b1, Ball b2, Space space) {
+    public synchronized static void specialCollision(Ball b1, Ball b2) {
         if (b1.getType() == Ball.ballType.EXPLOSIVE || b2.getType() == Ball.ballType.EXPLOSIVE) {
             if (b1.getType() == Ball.ballType.EXPLOSIVE) {
-                explode(b1, space);
+                explode(b1);
             }
             if (b2.getType() == Ball.ballType.EXPLOSIVE) {
-                explode(b2, space);
+                explode(b2);
             }
         } else {
             if (b1.getType() == Ball.ballType.BULLET && b2.getType() == Ball.ballType.BULLET) {
                 if (Math.hypot(b1.getSpeedx(), b1.getSpeedy()) > 8 && b2.getRadius()>b1.getRadius()*1.2) {
-                    impact(b1, b2, space);
+                    impact(b1, b2);
                 } else if(Math.hypot(b2.getSpeedx(), b2.getSpeedy()) > 8&& b2.getRadius()<b1.getRadius()*1.2){
-                    impact(b2, b1, space);
+                    impact(b2, b1);
                 }else{
                     bounce(b1, b2);
                 }
             } else if (b1.getType() == Ball.ballType.BULLET) {
                 if (Math.hypot(b1.getSpeedx(), b1.getSpeedy()) > 8 && b2.getRadius()>b1.getRadius()*1.2) {
-                    impact(b1, b2, space);
+                    impact(b1, b2);
                 } else {
                     bounce(b1, b2);
                 }
             } else {
                 if (Math.hypot(b2.getSpeedx(), b2.getSpeedy()) > 8 && b2.getRadius()<b1.getRadius()*1.2) {
-                    impact(b2, b1, space);
+                    impact(b2, b1);
                 } else {
                     bounce(b1, b2);
                 }
@@ -380,7 +396,7 @@ public class Physics {
         }
     }
 
-    public static void explode(Ball b, Space space) {
+    public static void explode(Ball b) {
         if (space.getBalls().contains(b)) {
             double area= b.getRadius()*b.getRadius()*Math.PI;
             double radius= Math.sqrt((area/10)/Math.PI);
@@ -388,13 +404,13 @@ public class Physics {
                 float angle = (float) (i * 36 + (new Random().nextInt(36)));
                 Ball bullet = new Ball((float) (b.getX() + radius * Math.cos(Math.toRadians(angle))), (float) (b.getY() + radius * Math.sin(Math.toRadians(angle))), 2, 1, (float) radius, angle, "B");
                 space.getBalls().add(bullet);
-                new Thread(new ThreadBall(bullet, space)).start();
+                new Thread(new ThreadBall(bullet)).start();
             }
             space.delete(space.getBalls().indexOf(b));
         }
     }
 
-    public static void impact(Ball bullet, Ball ball, Space space) {
+    public static void impact(Ball bullet, Ball ball) {
         if (space.getBalls().contains(bullet)) {
             double area= bullet.getRadius()*bullet.getRadius()*Math.PI;
             double perimeter= 2*ball.getRadius()*Math.PI;

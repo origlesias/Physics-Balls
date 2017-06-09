@@ -16,11 +16,9 @@ import java.util.logging.Logger;
 public class ThreadBall implements Runnable{
 
     Ball b;
-    Space space;
 
-    public ThreadBall(Ball b, Space space) {
+    public ThreadBall(Ball b) {
         this.b = b;
-        this.space= space;
     }
     
     
@@ -29,7 +27,7 @@ public class ThreadBall implements Runnable{
     public void run() {
         b.currentTime();
         while (true) {
-            Physics.ballMovement(b,space);
+            Physics.ballMovement(b);
             do {
                 try {
                     Thread.sleep(15);

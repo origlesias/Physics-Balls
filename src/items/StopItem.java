@@ -7,6 +7,7 @@ package items;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import physicballs.Physics;
 import physicballs.Space;
 
 /**
@@ -57,7 +58,7 @@ public class StopItem extends Obstacle{
             this.b = b;
             occupied = true;
         }
-        if (!intersects(this.b)||!parent.getBalls().contains(this.b)) {
+        if (!intersects(this.b)||Physics.inSpace(this.b, this)) {
             notifyBalls();
         }
     }

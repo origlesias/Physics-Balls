@@ -62,6 +62,7 @@ public class Space extends Canvas implements Runnable {
     public Space(int spaceWidth, int spaceHeigth, int ballLimit) {
         this.ballLimit = ballLimit;
         d= new Dimension(spaceWidth, spaceHeight);
+        Physics.getInstance().setSpace(this);
         //init
         init();
 
@@ -127,7 +128,7 @@ public class Space extends Canvas implements Runnable {
 
         for (int con = 0; con < balls.size(); con++) {
 //            new Thread(balls.get(con)).start();
-              new Thread(new ThreadBall(balls.get(con), this)).start();
+              new Thread(new ThreadBall(balls.get(con))).start();
         }
 
 
